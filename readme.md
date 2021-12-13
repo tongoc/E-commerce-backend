@@ -64,7 +64,7 @@ Body
     }
 `
 #### get a list of products
-Body
+##### Body
 `{
   products{
     items{
@@ -77,19 +77,19 @@ Body
 }`
 
 #### purchase an item
-Header
+##### Header
 `
     {
         "authorization": "Bearer ${token}"
     }
 `
-Body
+##### Body
 `mutation {
   purchaseProduct(id: 1)
 }`
 
 #### get purchased items
-Header
+##### Header
 `
     {
         "authorization": "Bearer ${token}"
@@ -106,27 +106,27 @@ Header
     }
   }
 }`
-#### subcrible to recieve notifications
-Header
+#### subcribe notifications
+##### Header
 `
     {
         "authorization": "Bearer ${token}"
     }
 `
-Body
+##### Body
 `
-mutation {
+##### mutation {
 	subcrible
 }
 `
-#### subcrible to recieve notifications via socket
-Header
+#### subcribe notifications via socket
+##### Header
 `
     {
         "authorization": "Bearer ${token}"
     }
 `
-Body
+##### Body
 `
 subscription {
   notification{
