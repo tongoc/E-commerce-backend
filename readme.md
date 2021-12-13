@@ -48,13 +48,13 @@ E-commerce Backend Development
     }
 
 #### Me
-Header
+1. header
 `
     {
         "authorization": "Bearer ${token}"
     }
 `
-Body
+2. body
 `
     {
         me {
@@ -63,8 +63,8 @@ Body
         }
     }
 `
-#### get a list of products
-##### Body
+#### Get a list of products
+1. body
 `{
   products{
     items{
@@ -76,20 +76,20 @@ Body
   }
 }`
 
-#### purchase an item
-##### Header
+#### Purchase an item
+1. header
 `
     {
         "authorization": "Bearer ${token}"
     }
 `
-##### Body
+2. body
 `mutation {
   purchaseProduct(id: 1)
 }`
 
-#### get purchased items
-##### Header
+#### Get purchased items
+1. header
 `
     {
         "authorization": "Bearer ${token}"
@@ -106,27 +106,27 @@ Body
     }
   }
 }`
-#### subcribe notifications
-##### Header
+#### Subcribe notifications
+1. header
 `
     {
         "authorization": "Bearer ${token}"
     }
 `
-##### Body
+2. body
 `
-##### mutation {
+mutation {
 	subcrible
 }
 `
-#### subcribe notifications via socket
-##### Header
+#### Subcribe notifications via socket
+1. header
 `
     {
         "authorization": "Bearer ${token}"
     }
 `
-##### Body
+2. body
 `
 subscription {
   notification{
