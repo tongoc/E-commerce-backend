@@ -33,3 +33,111 @@ E-commerce Backend Development
     ```  
 7. Fill OAuth configuration in facebook login setting form.
 <img width="1066" alt="Screen Shot 2021-12-13 at 8 36 08 PM" src="https://user-images.githubusercontent.com/8269003/145822158-cfbae14d-ff47-4323-8948-85d555446d09.png">
+
+8. Access graphql client & play
+`http://localhost:4000/playground`
+
+### Usage
+
+#### Login via facebook
+ `GET ngrokUrl/facebook/auth`
+  Response authorization token
+
+    {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6Ik5nb2MgVG8iLCJmYWNlYm9va0lkIjoyNzM4MTUwNDgzMTU0NzkxLCJzdWJzY3JpcHRpb24iOjEsImlhdCI6MTYzOTQwMzI2Nn0.ZrYMtay2NiDFqoRd8MhDHN3ho9MntstVWrhdxo9c7gM"
+    }
+
+#### Me
+Header
+`
+    {
+        "authorization": "Bearer ${token}"
+    }
+`
+Body
+`
+    {
+        me {
+            facebookId
+            name
+        }
+    }
+`
+#### get a list of products
+Body
+`{
+  products{
+    items{
+      id
+      detail
+      fee
+    }
+    total
+  }
+}`
+
+#### purchase an item
+Header
+`
+    {
+        "authorization": "Bearer ${token}"
+    }
+`
+Body
+`mutation {
+  purchaseProduct(id: 1)
+}`
+
+#### get purchased items
+Header
+`
+    {
+        "authorization": "Bearer ${token}"
+    }
+`
+`{
+  me {
+    purchasedProducts{
+      items{
+        id
+        detail
+      }
+      total
+    }
+  }
+}`
+#### subcrible to recieve notifications
+Header
+`
+    {
+        "authorization": "Bearer ${token}"
+    }
+`
+Body
+`
+mutation {
+	subcrible
+}
+`
+#### subcrible to recieve notifications via socket
+Header
+`
+    {
+        "authorization": "Bearer ${token}"
+    }
+`
+Body
+`
+subscription {
+  notification{
+    content
+  }
+}`
+#### Error code
+`
+{
+  "error": {
+    "message": "Unauthorized"
+  }
+}
+`
