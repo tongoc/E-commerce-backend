@@ -44,17 +44,16 @@ E-commerce Backend Development
   Response authorization token
 
     {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6Ik5nb2MgVG8iLCJmYWNlYm9va0lkIjoyNzM4MTUwNDgzMTU0NzkxLCJzdWJzY3JpcHRpb24iOjEsImlhdCI6MTYzOTQwMzI2Nn0.ZrYMtay2NiDFqoRd8MhDHN3ho9MntstVWrhdxo9c7gM"
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6Ik5nb2MgVG8iLCJmYWNlYm9va0lkIjoyNzM4MTUwNDgzMTU0NzkxLCJzdWJzY3JpcHRpb24iOjEsImlhdCI6MTYzOTQwMzI2Nn0.ZrYMtay2NiDFqoRd8MhDHN3ho9MntstVWrhdxo9c7gM"
     }
-
+#### Request header
+`
+{
+    "authorization": "Bearer ${token}"
+}
+`
 #### Me
-1. header
-`
-    {
-        "authorization": "Bearer ${token}"
-    }
-`
-2. body
+
 `
     {
         me {
@@ -64,38 +63,27 @@ E-commerce Backend Development
     }
 `
 #### Get a list of products
-1. body
-`{
-  products{
-    items{
+`
+{
+  products {
+    items {
       id
       detail
       fee
     }
     total
   }
-}`
+}
+`
 
 #### Purchase an item
-1. header
-`
-    {
-        "authorization": "Bearer ${token}"
-    }
-`
-2. body
 `mutation {
   purchaseProduct(id: 1)
 }`
 
 #### Get purchased items
-1. header
 `
-    {
-        "authorization": "Bearer ${token}"
-    }
-`
-`{
+{
   me {
     purchasedProducts{
       items{
@@ -105,28 +93,15 @@ E-commerce Backend Development
       total
     }
   }
-}`
-#### Subcribe notifications
-1. header
+}
 `
-    {
-        "authorization": "Bearer ${token}"
-    }
-`
-2. body
+#### Subscribe notifications
 `
 mutation {
 	subcrible
 }
 `
-#### Subcribe notifications via socket
-1. header
-`
-    {
-        "authorization": "Bearer ${token}"
-    }
-`
-2. body
+#### Subscribe notifications via socket
 `
 subscription {
   notification{
