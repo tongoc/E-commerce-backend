@@ -1,10 +1,8 @@
-import chai from 'chai';
 import { expect } from 'chai';
 import sinon from 'sinon';
-import  { loginRequired } from '../../graphql/resolvers';
-import  resolvers from '../../graphql/resolvers';
-
-const should = chai.should();
+import  resolvers, { loginRequired } from '../../graphql/resolvers';
+import pubsub, { USER_NOTIFICATION } from '../../subscription';
+import { PubSub } from 'graphql-subscriptions';
 
 describe('Query', function() {
   describe('Hello world!', function() { 
@@ -95,7 +93,7 @@ describe('Query', function() {
       database = null
     });
 
-    it('should call select table name exactly', async () => {
+    it('should refer correct table', async () => {
       let database = sinon.spy()
       resolvers.Query.products(null, {}, { database: database });
       expect(database.calledWith('products')).to.equal(true);
@@ -140,7 +138,7 @@ describe('Mutation', function() {
     });
 
   describe('addProduct', function () { 
-    it('should call select table name exactly', async () => {
+    it('should refer correct table', async () => {
       let database = sinon.spy()
       resolvers.Mutation.addProduct(null, {}, { database: database });
       expect(database.calledWith('products')).to.equal(true);
@@ -158,7 +156,7 @@ describe('Mutation', function() {
   })
 
   describe('purchasedProducts', function () { 
-    it('should call select table name exactly', async () => {
+    it('should refer correct table', async () => {
       let database = sinon.spy()
       resolvers.Mutation.purchaseProduct(null, {}, { database: database, req });
       expect(database.calledWith('purchasedProducts')).to.equal(true);
@@ -179,8 +177,10 @@ describe('Mutation', function() {
     beforeEach(() => {
       database = function(tableName) {
         return {
-          where: sinon.stub().returns(this),
-          update: sinon.stub().resolves(1),
+          where: sinon.stub().returns({
+            update: sinon.stub().resolves(1),
+          }),
+          insert: sinon.stub().resolves([1]),
         }
       };
 
@@ -196,17 +196,28 @@ describe('Mutation', function() {
       req = null;
     });
 
-    it('should call select table name exactly', async () => {
-      let database = sinon.spy()
-      resolvers.Mutation.subcrible(null, {}, { database: database, req });
-      expect(database.calledWith('users')).to.equal(true);
+    it('should refer correct table', async () => {
+      let spyDatabase = sinon.spy()
+      resolvers.Mutation.subcrible(null, {}, { database: spyDatabase, req });
+      expect(spyDatabase.calledWith('users')).to.equal(true);
     });
 
-    it('should return purchaseProduct without error', async () => {
-      const insertedProduct = await resolvers.Mutation.purchaseProduct(null, {
-        id: 1
-      }, { database, req });
-      expect(insertedProduct).to.equal(1);
+    it('should subcrible without error', async () => {
+      const subcribleResult = await resolvers.Mutation.subcrible(null, {}, { database, req });
+      expect(subcribleResult).to.equal('Success');
+    })
+
+    it('should return fail when get error', async () => {
+      const stubDatabase = database = function(tableName) {
+        return {
+          where: sinon.stub().returns({
+            update: sinon.stub().throws(),
+          }),
+          insert: sinon.stub().resolves([1]),
+        }
+      };
+      const subcribleResult = await resolvers.Mutation.subcrible(null, {}, { database: stubDatabase, req });
+      expect(subcribleResult).to.equal('Fail');
     })
   })
-})
+});

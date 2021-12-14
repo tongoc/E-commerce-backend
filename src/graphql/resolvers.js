@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { get } from 'lodash';
 import config from '../config';
-import database from '../database';
 import pubsub, { USER_NOTIFICATION } from '../subscription';
 
 export function loginRequired(req) {
@@ -73,10 +72,9 @@ const resolvers = {
         }
     },
     User: {
-        purchasedProducts: async (user) => {
-            const db = await database.connect();
-            const purchasedItems = await db('purchasedProducts').select('productId').where({ userId: user.id }); 
-            const products =  await db('products').select('*').whereIn('id', purchasedItems.map((item) => item.productId));
+        purchasedProducts: async (user, args, { database }) => {
+            const purchasedItems = await database('purchasedProducts').select('productId').where({ userId: user.id }); 
+            const products =  await database('products').select('*').whereIn('id', purchasedItems.map((item) => item.productId));
             return {
                 items: products,
                 total: products.length

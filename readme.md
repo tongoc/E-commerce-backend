@@ -34,8 +34,17 @@ E-commerce Backend Development
 7. Fill OAuth configuration in facebook login setting form.
 <img width="1066" alt="Screen Shot 2021-12-13 at 8 36 08 PM" src="https://user-images.githubusercontent.com/8269003/145822158-cfbae14d-ff47-4323-8948-85d555446d09.png">
 
-8. Access graphql client & play
+8. Access graphql client
 `http://localhost:4000/playground`
+
+9. Run test
+     ```sh
+   npm test
+   ```
+10. Run test with report
+     ```sh
+   npm test-report
+   ```
 
 ### Usage
 
