@@ -11,8 +11,7 @@ import config from './config';
 passport.use(new FacebookStrategy(config.auth.facebook,
   async function (accessToken, refreshToken, profile, done) {
     try {
-      const db = await database.connect();
-      const user = await db('users').where({
+      const user = await database('users').where({
         facebookId: profile.id
       }).limit(1);
       if (user[0]) {
@@ -20,7 +19,7 @@ passport.use(new FacebookStrategy(config.auth.facebook,
         return;
       }
 
-      const insertedUser = await db('users').insert({
+      const insertedUser = await database('users').insert({
         name: profile.displayName,
         facebookId: profile.id
       });
@@ -42,7 +41,8 @@ app.use('/graphql', graphqlHTTP((req) => ({
   schema: schema,
   graphiql: { headerEditorEnabled: true },
   context: {
-    req
+    req,
+    database
   }
 })));
 app.get('/', (req, res) => {

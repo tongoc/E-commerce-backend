@@ -4,15 +4,15 @@ import config from '../config';
 import database from '../database';
 import pubsub, { USER_NOTIFICATION } from '../subscription';
 
-function loginRequired(req) {
+export function loginRequired(req) {
     const token = get(req.headers, 'authorization', '').replace('Bearer ', '');
     if (!token) {
-        throw new Error('Unauthorized!')
+        throw Error('Unauthorized!')
     }
 
     const user = jwt.decode(token, config.auth.secret);
     if (!user) {
-        throw new Error("Unauthorized");
+        throw Error("Unauthorized!");
     }
     return user;
 }
@@ -26,12 +26,11 @@ const resolvers = {
             const user = loginRequired(req)
             return {
                 ...user,
-                facebookId: user.id
+                facebookId: user.facebookId
             };
         },
-        products: async () => {
-            const db = await database.connect();
-            const items = await db('products').select('*');
+        products: async (_, args, { database }) => {
+            const items = await database('products').select('*');
             return {
                 items,
                 total: items.length
@@ -39,28 +38,25 @@ const resolvers = {
         },
     },
     Mutation: {
-        addProduct: async (_, { item }) => {
-            const db = await database.connect();
-            const inserted = await db('products').insert(item);
+        addProduct: async (_, { item }, { database }) => {
+            const inserted = await database('products').insert(item);
             return {
                 id: inserted[0],
                 ...item
             }
         },
-        purchaseProduct: async (_, { id }, { req }) => {
-            const db = await database.connect();
+        purchaseProduct: async (_, { id }, { req, database }) => {
             const user = loginRequired(req)
-            const inserted = await db('purchasedProducts').insert({
+            const inserted = await database('purchasedProducts').insert({
                 productId: id,
                 userId: user.id
             });
             return inserted[0];
         },
-        subcrible: async (_, args, { req }) => {
-            const db = await database.connect();
+        subcrible: async (_, args, { req, database }) => {
             const user = loginRequired(req);
             try {
-                await db('users').where({
+                await database('users').where({
                     id: user.id
                 }).update({
                     subscription: 1
